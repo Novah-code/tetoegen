@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>테토-에겐 성격 유형 테스트</title>
+    <meta name="description" content="당신의 진짜 성향을 발견해보세요! 테토-에겐 성격 유형 테스트">
+    <meta property="og:title" content="테토-에겐 성격 유형 테스트">
+    <meta property="og:description" content="당신의 진짜 성향을 발견해보세요!">
+    <meta property="og:type" content="website">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8e9f3 100%);
+            min-height: 100vh;
+            color: #2c2c2c;
+            overflow-x: hidden;
+        }
+        
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(99, 102, 241, 0.3);
+            border-radius: 50%;
+            animation: twinkle 3s infinite ease-in-out;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px 0;
+        }
+        
+        .title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            letter-spacing: -0.02em;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .question-container {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: none;
+        }
+        
+        .question-container.active {
+            display: block;
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .question-number {
+            font-size: 0.9rem;
+            color: #8B5CF6;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .question {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            line-height: 1.5;
+            color: #333;
+        }
+        
+        .options {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .option {
+            background: rgba(249, 250, 251, 0.8);
+            border: 2px solid rgba(229, 231, 235, 0.5);
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+        
+        .option:hover {
+            background: rgba(139, 92, 246, 0.05);
+            border-color: rgba(139, 92, 246, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .option.selected {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(118, 75, 162, 0.1));
+            border-color: #8B5CF6;
+            transform: translateY(-2px);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(229, 231, 235, 0.5);
+            border-radius: 10px;
+            margin-bottom: 40px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #8B5CF6, #EC4899);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-prev {
+            background: rgba(107, 114, 128, 0.1);
+            color: #6B7280;
+        }
+        
+        .btn-prev:hover {
+            background: rgba(107, 114, 128, 0.2);
+        }
+        
+        .btn-next {
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+            color: white;
+        }
+        
+        .btn-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .result-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 50px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: none;
+        }
+        
+        .result-container.active {
+            display: block;
+            animation: fadeInScale 0.8s ease-out;
+        }
+        
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .result-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        
+        .result-type {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .result-description {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .result-details {
+            text-align: left;
+            background: rgba(249, 250, 251, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .result-details h3 {
+            color: #8B5CF6;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .result-details ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .result-details li {
+            padding: 8px 0;
+            color: #555;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .result-details li:before {
+            content: "✨";
+            position: absolute;
+            left: 0;
+        }
+        
+        .share-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(249, 250, 251, 0.8);
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .share-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        
+        .share-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .share-link {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .share-kakao {
+            background: #FEE500;
+            color: #3C1E1E;
+        }
+        
+        .share-twitter {
+            background: #1DA1F2;
+            color: white;
+        }
+        
+        .share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .copy-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(139, 92, 246, 0.95);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .copy-notification.show {
+            opacity: 1;
+        }
+        
+        .restart-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .restart-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .question-container,
+            .result-container {
+                padding: 25px;
+            }
+            
+            .question {
+                font-size: 1.1rem;
+            }
+            
+            .option {
+                padding: 15px;
+                font-size: 0.95rem;
+            }
+            
+            .buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars"></div>
+    
+    <div class="copy-notification" id="copyNotification">
+        링크가 복사되었습니다! 📋
+    </div>
+    
+    <div class="container">
+        <div class="header">
+            <h1 class="title">테토-에겐 성격 유형 테스트</h1>
+            <p class="subtitle">당신의 진짜 성향을 발견해보세요</p>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        
+        <div id="question-container"></div>
+        <div id="result-container"></div>
+        
+        <div class="buttons" id="buttons">
+            <button class="btn btn-prev" id="prevBtn" onclick="prevQuestion()">이전</button>
+            <button class="btn btn-next" id="nextBtn" onclick="nextQuestion()">다음</button>
+        </div>
+    </div>
+    
+    <script>
+        const questions = [
+            {
+                question: "카페에서 음료를 주문할 때 당신의 스타일은?",
+                options: [
+                    { text: "메뉴판 안 보고 바로 '아메리카노 한 잔'", type: "teto" },
+                    { text: "계절 한정 메뉴나 특별한 음료를 골라본다", type: "egen" },
+                    { text: "직원에게 추천 메뉴가 뭔지 물어본다", type: "teto" },
+                    { text: "메뉴판을 오래 보며 고민하다가 결국 평소 마시던 걸로", type: "egen" }
+                ]
+            },
+            {
+                question: "갑자기 3일 휴가가 생긴다면?",
+                options: [
+                    { text: "즉석에서 친구들 불러모아 여행 계획 세우기", type: "teto" },
+                    { text: "예전부터 가고 싶었던 전시회나 박물관 투어", type: "egen" },
+                    { text: "밀린 드라마 정주행하며 집에서 충전 타임", type: "egen" },
+                    { text: "근교로 드라이브 가서 맛집 탐방하기", type: "teto" }
+                ]
+            },
+            {
+                question: "밤 12시에 갑자기 배가 고파진다면?",
+                options: [
+                    { text: "바로 치킨이나 야식 주문 앱 켜기", type: "teto" },
+                    { text: "냉장고 뒤져서 있는 재료로 간단히 해먹기", type: "egen" },
+                    { text: "편의점 가서 컵라면이나 간식 사 오기", type: "teto" },
+                    { text: "물 마시고 참았다가 내일 아침에 제대로 먹기", type: "egen" }
+                ]
+            },
+            {
+                question: "인스타그램 피드를 보다가 예쁜 카페 발견!",
+                options: [
+                    { text: "당장 친구한테 연락해서 '여기 가자!' 하고 약속 잡기", type: "teto" },
+                    { text: "저장해뒀다가 혼자 조용한 시간에 가보기", type: "egen" },
+                    { text: "리뷰 찾아보고 메뉴까지 다 확인한 후 방문", type: "egen" },
+                    { text: "스토리에 올리면서 '여기 가본 사람?' 하고 반응 보기", type: "teto" }
+                ]
+            },
+            {
+                question: "새로 산 옷을 입고 나갔는데 어색하다는 느낌이 든다면?",
+                options: [
+                    { text: "상관없어! 오늘부터 이게 내 스타일이야", type: "teto" },
+                    { text: "빨리 집에 가서 평소 입던 옷으로 갈아입고 싶다", type: "egen" },
+                    { text: "친구한테 사진 찍어달라고 해서 괜찮은지 확인", type: "teto" },
+                    { text: "거울 보면서 계속 신경 쓰이지만 그냥 하루 참기", type: "egen" }
+                ]
+            },
+            {
+                question: "좋아하는 가수의 콘서트 티켓팅에 실패했다면?",
+                options: [
+                    { text: "암표라도 구해서 꼭 간다! 방법은 있어", type: "teto" },
+                    { text: "아쉽지만 다음 기회를 기다린다... 운명이겠지", type: "egen" },
+                    { text: "온라인 생중계라도 찾아서 집에서 보기", type: "egen" },
+                    { text: "친구들한테 연락해서 혹시 여분 티켓 있는지 물어보기", type: "teto" }
+                ]
+            },
+            {
+                question: "처음 보는 사람들과 함께 게임을 해야 하는 상황이라면?",
+                options: [
+                    { text: "게임 룰 설명하면서 분위기 메이커 역할", type: "teto" },
+                    { text: "일단 지켜보면서 분위기 파악 후 참여", type: "egen" },
+                    { text: "별로 하고 싶지 않지만 어쩔 수 없이 따라가기", type: "egen" },
+                    { text: "못하는 척하면서 은근슬쩍 이기려고 노력", type: "teto" }
+                ]
+            },
+            {
+                question: "좋아하는 사람이 읽씹을 했다면?",
+                options: [
+                    { text: "바로 전화 걸어서 '왜 안 읽어?' 하고 물어보기", type: "teto" },
+                    { text: "내가 뭔가 잘못 말했나 계속 메시지 다시 읽어보기", type: "egen" },
+                    { text: "일단 하루 기다려보고 반응 없으면 다시 연락", type: "teto" },
+                    { text: "바쁠 수도 있으니까... 상대방이 연락할 때까지 기다리기", type: "egen" }
+                ]
+            },
+            {
+                question: "친구가 '오늘 기분 안 좋아'라고 말한다면?",
+                options: [
+                    { text: "'뭔 일인데? 치킨 먹으러 가자!' 하고 바로 끌어내기", type: "teto" },
+                    { text: "'괜찮아? 얘기하고 싶으면 언제든 연락해' 하고 기다리기", type: "egen" },
+                    { text: "일단 들어주고 조언이나 해결책 제시하기", type: "teto" },
+                    { text: "말없이 옆에 있어주면서 조용히 공감해주기", type: "egen" }
+                ]
+            },
+            {
+                question: "갑자기 비가 오는데 우산이 없다면?",
+                options: [
+                    { text: "편의점에서 우산 사거나 누군가와 함께 쓰기", type: "teto" },
+                    { text: "비 그칠 때까지 카페나 건물에서 기다리기", type: "egen" },
+                    { text: "그냥 뛰어가기! 어차피 집 가면 씻을 거니까", type: "teto" },
+                    { text: "가방으로 머리 가리면서 조심조심 걸어가기", type: "egen" }
+                ]
+            }
+        ];
+        
+        let currentQuestion = 0;
+        let answers = [];
+        let isGenderSelected = false;
+        
+        // 별 생성
+        function createStars() {
+            const stars = document.querySelector('.stars');
+            for (let i = 0; i < 50; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                stars.appendChild(star);
+            }
+        }
+        
+        function checkUrlParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const resultParam = urlParams.get('result');
+            
+            if (resultParam) {
+                // URL에 결과가 있으면 바로 결과 화면 표시
+                const result = getResultData(resultParam);
+                if (result) {
+                    document.getElementById('question-container').style.display = 'none';
+                    document.getElementById('buttons').style.display = 'none';
+                    document.querySelector('.progress-bar').style.display = 'none';
+                    
+                    const resultContainer = document.getElementById('result-container');
+                    resultContainer.innerHTML = `
+                        <div class="result-container active">
+                            <div class="result-icon">${result.icon}</div>
+                            <div class="result-type" style="color: ${result.typeColor}">${result.type}</div>
+                            <div class="result-description">${result.description}</div>
+                            
+                            <div class="result-details">
+                                <h3>✨ 성격 특징</h3>
+                                <ul>
+                                    ${result.traits.map(trait => `<li>${trait}</li>`).join('')}
+                                </ul>
+                            </div>
+                            
+                            <div class="result-details">
+                                <h3>💕 연애 스타일</h3>
+                                <ul>
+                                    ${result.love.map(love => `<li>${love}</li>`).join('')}
+                                </ul>
+                            </div>
+                            
+                            <div class="share-section">
+                                <h3 style="color: #8B5CF6; margin-bottom: 10px;">🔗 결과 공유하기</h3>
+                                <p style="color: #666; font-size: 0.9rem;">친구들도 테스트해보게 공유해주세요!</p>
+                                <div class="share-buttons">
+                                    <button class="share-btn share-link" onclick="copyResultLink()">
+                                        📋 링크 복사
+                                    </button>
+                                    <button class="share-btn share-kakao" onclick="shareKakao()">
+                                        💬 카톡 공유
+                                    </button>
+                                    <button class="share-btn share-twitter" onclick="shareTwitter()">
+                                        🐦 트위터 공유
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <button class="restart-btn" onclick="restartTest()">테스트 해보기</button>
+                        </div>
+                    `;
+                    return;
+                }
+            }
+            
+            // URL에 결과가 없으면 일반 테스트 시작
+            showGenderSelection();
+        }
+        
+        function showGenderSelection() {
+            const container = document.getElementById('question-container');
+            container.innerHTML = `
+                <div class="question-container active">
+                    <div class="question-number">시작하기 전에</div>
+                    <div class="question">당신의 성별을 선택해주세요</div>
+                    <div class="options">
+                        <div class="option" onclick="selectGender('male')">남성</div>
+                        <div class="option" onclick="selectGender('female')">여성</div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('buttons').style.display = 'none';
+        }
+        
+        function selectGender(gender) {
+            answers.push({ type: gender });
+            isGenderSelected = true;
+            document.getElementById('buttons').style.display = 'flex';
+            showQuestion();
+        }
+        
+        function showQuestion() {
+            if (currentQuestion >= questions.length) {
+                showResult();
+                return;
+            }
+            
+            const container = document.getElementById('question-container');
+            const question = questions[currentQuestion];
+            
+            container.innerHTML = `
+                <div class="question-container active">
+                    <div class="question-number">질문 ${currentQuestion + 1} / ${questions.length}</div>
+                    <div class="question">${question.question}</div>
+                    <div class="options">
+                        ${question.options.map((option, index) => 
+                            `<div class="option" onclick="selectAnswer(${index})">${option.text}</div>`
+                        ).join('')}
+                    </div>
+                </div>
+            `;
+            
+            updateProgress();
+            updateButtons();
+        }
+        
+        function selectAnswer(optionIndex) {
+            const options = document.querySelectorAll('.option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            options[optionIndex].classList.add('selected');
+            
+            answers[currentQuestion + 1] = questions[currentQuestion].options[optionIndex];
+            document.getElementById('nextBtn').disabled = false;
+        }
+        
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+        
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion();
+            }
+        }
+        
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+        }
+        
+        function updateButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            prevBtn.style.display = currentQuestion === 0 ? 'none' : 'block';
+            nextBtn.disabled = !answers[currentQuestion + 1];
+        }
+        
+        function calculateResult() {
+            const gender = answers[0].type;
+            let tetoScore = 0;
+            let egenScore = 0;
+            
+            for (let i = 1; i < answers.length; i++) {
+                if (answers[i].type === 'teto') {
+                    tetoScore++;
+                } else if (answers[i].type === 'egen') {
+                    egenScore++;
+                }
+            }
+            
+            const isTeto = tetoScore > egenScore;
+            
+            if (gender === 'male') {
+                return isTeto ? 'teto-male' : 'egen-male';
+            } else {
+                return isTeto ? 'teto-female' : 'egen-female';
+            }
+        }
+        
+        function getResultData(type) {
+            const results = {
+                'teto-male': {
+                    icon: '🦁',
+                    type: '테토남',
+                    typeColor: '#FF6B6B',
+                    description: '활발하고 주도적인 에너지로 가득한 당신!',
+                    traits: [
+                        '리더십이 강하고 추진력이 있어요',
+                        '친구들과 어울리는 것을 좋아해요',
+                        '직설적이고 솔직한 성격이에요',
+                        '목표 지향적이고 현실적이에요',
+                        '새로운 도전을 즐기는 모험가예요'
+                    ],
+                    love: [
+                        '감정보다는 행동으로 표현해요',
+                        '이상형은 외모와 성격이 단순명료해요',
+                        '직접적인 대시를 선호해요',
+                        '갈등은 바로 해결하려고 해요'
+                    ]
+                },
+                'egen-male': {
+                    icon: '🌙',
+                    type: '에겐남',
+                    typeColor: '#9B59B6',
+                    description: '섬세하고 감성적인 매력을 가진 당신!',
+                    traits: [
+                        '예술적 감각과 미적 센스가 뛰어나요',
+                        '혼자만의 시간을 소중히 여겨요',
+                        '감정 표현이 풍부하고 섬세해요',
+                        '트렌드에 민감하고 스타일리시해요',
+                        '깊이 있는 대화를 선호해요'
+                    ],
+                    love: [
+                        '감성적인 교류를 중요시해요',
+                        '대시받는 것을 선호해요',
+                        '로맨틱한 분위기를 좋아해요',
+                        '상대방의 마음을 세심하게 살펴요'
+                    ]
+                },
+                'teto-female': {
+                    icon: '⚡',
+                    type: '테토녀',
+                    typeColor: '#E74C3C',
+                    description: '독립적이고 당당한 에너지를 가진 당신!',
+                    traits: [
+                        '독립심이 강하고 자기주장이 뚜렷해요',
+                        '활발하고 사교적인 성격이에요',
+                        '커리어와 성취를 중요시해요',
+                        '운동이나 액티비티를 즐겨요',
+                        '솔직하고 직설적인 소통을 해요'
+                    ],
+                    love: [
+                        '먼저 다가가는 것을 두려워하지 않아요',
+                        '남성적 매력에 끌려요',
+                        '평등하고 수평적인 관계를 선호해요',
+                        '감정보다는 현실적 판단을 해요'
+                    ]
+                },
+                'egen-female': {
+                    icon: '🌸',
+                    type: '에겐녀',
+                    typeColor: '#F39C12',
+                    description: '온화하고 여성스러운 매력을 가진 당신!',
+                    traits: [
+                        '공감 능력이 뛰어나고 배려심이 많아요',
+                        '조용하고 차분한 분위기를 좋아해요',
+                        '감성적이고 낭만적인 것들을 선호해요',
+                        '안정감과 평화로운 관계를 추구해요',
+                        '예술이나 문화에 관심이 많아요'
+                    ],
+                    love: [
+                        '감성적 교감을 가장 중요시해요',
+                        '이끌어주는 상대를 선호해요',
+                        '로맨틱한 상황을 좋아해요',
+                        '관계에서 상처받기 쉬운 편이에요'
+                    ]
+                }
+            };
+            
+            return results[type];
+        }
+        
+        function showResult() {
+            const resultType = calculateResult();
+            const result = getResultData(resultType);
+            
+            // URL에 결과 파라미터 추가
+            const url = new URL(window.location);
+            url.searchParams.set('result', resultType);
+            window.history.pushState({}, '', url);
+            
+            document.getElementById('question-container').style.display = 'none';
+            document.getElementById('buttons').style.display = 'none';
+            document.querySelector('.progress-bar').style.display = 'none';
+            
+            const resultContainer = document.getElementById('result-container');
+            resultContainer.innerHTML = `
+                <div class="result-container active">
+                    <div class="result-icon">${result.icon}</div>
+                    <div class="result-type" style="color: ${result.typeColor}">${result.type}</div>
+                    <div class="result-description">${result.description}</div>
+                    
+                    <div class="result-details">
+                        <h3>✨ 성격 특징</h3>
+                        <ul>
+                            ${result.traits.map(trait => `<li>${trait}</li>`).join('')}
+                        </ul>
+                    </div>
+                    
+                    <div class="result-details">
+                        <h3>💕 연애 스타일</h3>
+                        <ul>
+                            ${result.love.map(love => `<li>${love}</li>`).join('')}
+                        </ul>
+                    </div>
+                    
+                    <div class="share-section">
+                        <h3 style="color: #8B5CF6; margin-bottom: 10px;">🔗 결과 공유하기</h3>
+                        <p style="color: #666; font-size: 0.9rem;">친구들도 테스트해보게 공유해주세요!</p>
+                        <div class="share-buttons">
+                            <button class="share-btn share-link" onclick="copyResultLink()">
+                                📋 링크 복사
+                            </button>
+                            <button class="share-btn share-kakao" onclick="shareKakao()">
+                                💬 카톡 공유
+                            </button>
+                            <button class="share-btn share-twitter" onclick="shareTwitter()">
+                                🐦 트위터 공유
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button class="restart-btn" onclick="restartTest()">다시 테스트하기</button>
+                </div>
+            `;
+        }
+        
+        function restartTest() {
+            currentQuestion = 0;
+            answers = [];
+            isGenderSelected = false;
+            
+            // URL에서 결과 파라미터 제거
+            const url = new URL(window.location);
+            url.searchParams.delete('result');
+            window.history.pushState({}, '', url);
+            
+            document.getElementById('result-container').style.display = 'none';
+            document.getElementById('question-container').style.display = 'block';
+            document.getElementById('buttons').style.display = 'flex';
+            document.querySelector('.progress-bar').style.display = 'block';
+            
+            showGenderSelection();
+        }
+        
+        function copyResultLink() {
+            const currentUrl = window.location.href;
+            navigator.clipboard.writeText(currentUrl).then(() => {
+                showCopyNotification();
+            }).catch(() => {
+                // 클립보드 API가 지원되지 않는 경우 fallback
+                const textArea = document.createElement('textarea');
+                textArea.value = currentUrl;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showCopyNotification();
+            });
+        }
+        
+        function showCopyNotification() {
+            const notification = document.getElementById('copyNotification');
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2000);
+        }
+        
+        function shareKakao() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const resultParam = urlParams.get('result');
+            const result = getResultData(resultParam);
+            const currentUrl = window.location.href;
+            
+            const text = `나는 ${result.type}! ${result.description}\n\n테토-에겐 성격 유형 테스트 해보기: ${currentUrl}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: `나는 ${result.type}!`,
+                    text: text,
+                    url: currentUrl
+                });
+            } else {
+                copyResultLink();
+            }
+        }
+        
+        function shareTwitter() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const resultParam = urlParams.get('result');
+            const result = getResultData(resultParam);
+            const currentUrl = window.location.href;
+            
+            const text = `나는 ${result.type}! ${result.description}\n\n#테토에겐테스트 #성격유형테스트`;
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(currentUrl)}`;
+            
+            window.open(twitterUrl, '_blank');
+        }
+        
+        // 초기 실행
+        createStars();
+        checkUrlParams();
+    </script>
+</body>
+</html>
