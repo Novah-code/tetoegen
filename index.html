@@ -234,10 +234,6 @@
         .result-icon {
             font-size: 4rem;
             margin-bottom: 20px;
-            text-align: center;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
         
         .result-type {
@@ -378,7 +374,14 @@
             background-position: center;
             margin: 0 auto;
             display: block;
-            text-align: center;
+        }
+
+        .nova-teto-male {
+            background-image: url('4.png');
+        }
+
+        .nova-egen-male {
+            background-image: url('3.png');
         }
 
         .nova-teto-female {
@@ -445,6 +448,9 @@
     <div class="container">
         <div class="header">
             <h1 class="title">테토-에겐 성격 유형 테스트</h1>
+            <div style="text-align: center; margin: 30px 0;">
+                <img src="intro.png" style="max-width: 350px; height: auto;">
+            </div>
             <p class="subtitle">당신의 진짜 성향을 발견해보세요</p>
         </div>
         
@@ -742,7 +748,7 @@
         function getResultData(type) {
             const results = {
                 'teto-male': {
-                    icon: '🦁',
+                    icon: '<div class="nova-image nova-teto-male"></div>',
                     type: '테토남',
                     typeColor: '#FF6B6B',
                     description: '활발하고 주도적인 에너지로 가득한 당신!',
@@ -761,7 +767,7 @@
                     ]
                 },
                 'egen-male': {
-                    icon: '🌙',
+                    icon: '<div class="nova-image nova-egen-male"></div>',
                     type: '에겐남',
                     typeColor: '#9B59B6',
                     description: '섬세하고 감성적인 매력을 가진 당신!',
@@ -874,7 +880,7 @@
                     
                     <div style="text-align: center;">
                         <a href="https://instagram.com/novakitz" target="_blank" class="instagram-btn">
-                            📸 노바키츠 인스타 구경하기
+                            📸 노바 인스타 팔로우하기
                         </a>
                     </div>
                     
