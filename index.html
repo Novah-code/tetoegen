@@ -4,16 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>테토-에겐 성격 유형 테스트</title>
-
-    <!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-2RV167T8DP"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-2RV167T8DP');
-</script>
-    
     <meta name="description" content="당신의 진짜 성향을 발견해보세요! 테토-에겐 성격 유형 테스트">
     <meta property="og:title" content="테토-에겐 성격 유형 테스트">
     <meta property="og:description" content="당신의 진짜 성향을 발견해보세요!">
@@ -374,6 +364,39 @@
         .restart-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .nova-image {
+            width: 120px;
+            height: 120px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin: 0 auto;
+        }
+
+        .nova-teto-female {
+            background-image: url('0.png');
+        }
+
+        .nova-egen-female {
+            background-image: url('1.png');
+        }
+        
+        .instagram-btn {
+            background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            margin: 20px 0;
+            transition: transform 0.3s ease;
+        }
+        
+        .instagram-btn:hover {
+            transform: translateY(-2px);
         }
         
         @media (max-width: 768px) {
@@ -751,7 +774,7 @@
                     ]
                 },
                 'teto-female': {
-                    icon: '⚡',
+                    icon: '<div class="nova-image nova-teto-female"></div>',
                     type: '테토녀',
                     typeColor: '#E74C3C',
                     description: '독립적이고 당당한 에너지를 가진 당신!',
@@ -770,7 +793,7 @@
                     ]
                 },
                 'egen-female': {
-                    icon: '🌸',
+                    icon: '<div class="nova-image nova-egen-female"></div>',
                     type: '에겐녀',
                     typeColor: '#F39C12',
                     description: '온화하고 여성스러운 매력을 가진 당신!',
@@ -841,6 +864,12 @@
                                 🐦 트위터 공유
                             </button>
                         </div>
+                    </div>
+                    
+                    <div style="text-align: center;">
+                        <a href="https://instagram.com/novakitz" target="_blank" class="instagram-btn">
+                            📸 노바 인스타 팔로우하기
+                        </a>
                     </div>
                     
                     <button class="restart-btn" onclick="restartTest()">다시 테스트하기</button>
